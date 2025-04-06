@@ -1,59 +1,21 @@
-# (c) @RknDeveloperr
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Special Thanks To @ReshamOwner
-# Update Channel @Digital_Botz & @DigitalBotz_Support
-"""
-Apache License 2.0
-Copyright (c) 2022 @Digital_Botz
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
-"""
-
-# pyrogram imports
 from pyrogram import Client, filters
 from pyrogram.enums import MessageMediaType
 from pyrogram.errors import FloodWait
 from pyrogram.file_id import FileId
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply
-
-# hachoir imports
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
-
-# bots imports
 from helper.utils import progress_for_pyrogram, convert, humanbytes, add_prefix_suffix, remove_path
 from helper.database import digital_botz
 from helper.ffmpeg import change_metadata
 from config import Config
-
-# extra imports
 from asyncio import sleep
 import os, time, asyncio
 
 
-UPLOAD_TEXT = """Uploading Started...."""
-DOWNLOAD_TEXT = """Download Started..."""
+UPLOAD_TEXT = """Successfully renamed 💝 Not trying to Upload...."""
+DOWNLOAD_TEXT = """Please Wait!.... Starting to download ✨"""
 
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION)
 
@@ -333,17 +295,7 @@ async def doc(bot, update):
                 await digital_botz.set_used_limit(user_id, used_remove)
             await remove_path(ph_path, file_path, dl_path, metadata_path)
             return await rkn_processing.edit(f" Eʀʀᴏʀ {e}")
-
-# please give credit 🙏🥲
 		    
     await remove_path(ph_path, file_path, dl_path, metadata_path)
     return await rkn_processing.edit("Uploaded Successfully....")
     
-#@RknDeveloper
-#✅ Team-RknDeveloper
-# Rkn Developer 
-# Don't Remove Credit 😔
-# Telegram Channel @RknDeveloper & @Rkn_Botz
-# Developer @RknDeveloperr
-# Special Thanks To @ReshamOwner
-# Update Channel @Digital_Botz & @DigitalBotz_Support
