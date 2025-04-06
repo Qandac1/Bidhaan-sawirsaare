@@ -1,5 +1,6 @@
 import math, time, re, datetime, pytz, os
-from config import Config, rkn 
+from config import Config
+from script import rkn 
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 async def progress_for_pyrogram(current, total, ud_type, message, start):
