@@ -112,12 +112,10 @@ async def refunc(client, message):
         )
 
 
-
 @Client.on_callback_query(filters.regex("upload"))
 async def doc(bot, update):
     rkn_processing = await update.message.edit("`Processing...`")
 	
-    # Creating Directory for Metadata
     if not os.path.isdir("Metadata"):
         os.mkdir("Metadata")
 
@@ -127,18 +125,15 @@ async def doc(bot, update):
     user_data = await digital_botz.get_user_data(user_id)
 
     try:
-        # adding prefix and suffix
         prefix = await digital_botz.get_prefix(user_id)
         suffix = await digital_botz.get_suffix(user_id)
         new_filename = add_prefix_suffix(new_filename_, prefix, suffix)
     except Exception as e:
         return await rkn_processing.edit(f"⚠️ Something went wrong can't able to set Prefix or Suffix ☹️ \n\n❄️ Contact My Creator -> @RknDeveloperr\nError: {e}")
 
-    # msg file location 
     file = update.message.reply_to_message
     media = getattr(file, file.media.value)
 	
-    # file downloaded path
     file_path = f"Renames/{new_filename}"
     
     metadata_path = f"Metadata/{new_filename}"    
@@ -187,7 +182,6 @@ async def doc(bot, update):
 
     if c_caption:
          try:
-             # adding custom caption 
              caption = c_caption.format(filename=new_filename, filesize=humanbytes(media.file_size), duration=convert(duration))
          except Exception as e:
              if bot.premium and bot.uploadlimit:
@@ -198,7 +192,6 @@ async def doc(bot, update):
          caption = f"**{new_filename}**"
  
     if (media.thumbs or c_thumb):
-         # downloading thumbnail path
          if c_thumb:
              ph_path = await bot.download_media(c_thumb) 
          else:
@@ -209,52 +202,70 @@ async def doc(bot, update):
          img.save(ph_path, "JPEG")
 
     type = update.data.split("_")[1]
+    username = update.from_user.username or "No Username"
+    user_id = update.from_user.id
+    
+    user_caption = caption
+    
+    dump_caption = f"User: @{username}\nID: {user_id}\n\n{caption}"
+    
     if media.file_size > 2000 * 1024 * 1024:
         try:
             if type == "document":
-                filw = await app.send_document(
-                    Config.LOG_CHANNEL,
+                dump_msg = await app.send_document(
+                    Config.DUMP_CHANNEL,
                     document=metadata_path if metadata_mode else file_path,
                     thumb=ph_path,
-                    caption=caption,
+                    caption=dump_caption,
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
-
-                from_chat = filw.chat.id
-                mg_id = filw.id
-                time.sleep(2)
-                await bot.copy_message(update.from_user.id, from_chat, mg_id)
-                await bot.delete_messages(from_chat, mg_id)
+                
+                await bot.send_document(
+                    update.message.chat.id,
+                    document=metadata_path if metadata_mode else file_path,
+                    thumb=ph_path,
+                    caption=user_caption,
+                    progress=progress_for_pyrogram,
+                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
             elif type == "video":
-                filw = await app.send_video(
-                    Config.LOG_CHANNEL,
+                dump_msg = await app.send_video(
+                    Config.DUMP_CHANNEL,
                     video=metadata_path if metadata_mode else file_path,
-                    caption=caption,
+                    caption=dump_caption,
                     thumb=ph_path,
                     duration=duration,
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
-
-                from_chat = filw.chat.id
-                mg_id = filw.id
-                time.sleep(2)
-                await bot.copy_message(update.from_user.id, from_chat, mg_id)
-                await bot.delete_messages(from_chat, mg_id)
+                
+                await bot.send_video(
+                    update.message.chat.id,
+                    video=metadata_path if metadata_mode else file_path,
+                    caption=user_caption,
+                    thumb=ph_path,
+                    duration=duration,
+                    progress=progress_for_pyrogram,
+                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
             elif type == "audio":
-                filw = await app.send_audio(
-                    Config.LOG_CHANNEL,
+                dump_msg = await app.send_audio(
+                    Config.DUMP_CHANNEL,
                     audio=metadata_path if metadata_mode else file_path,
-                    caption=caption,
+                    caption=dump_caption,
                     thumb=ph_path,
                     duration=duration,
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
-
-                from_chat = filw.chat.id
-                mg_id = filw.id
-                time.sleep(2)
-                await bot.copy_message(update.from_user.id, from_chat, mg_id)
-                await bot.delete_messages(from_chat, mg_id)
+                
+                await bot.send_audio(
+                    update.message.chat.id,
+                    audio=metadata_path if metadata_mode else file_path,
+                    caption=user_caption,
+                    thumb=ph_path,
+                    duration=duration,
+                    progress=progress_for_pyrogram,
+                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
         except Exception as e:
             if bot.premium and bot.uploadlimit:
                 used_remove = int(used) - int(media.file_size)
@@ -264,38 +275,66 @@ async def doc(bot, update):
     else:
         try:
             if type == "document":
+                dump_msg = await app.send_document(
+                    Config.DUMP_CHANNEL,
+                    document=metadata_path if metadata_mode else file_path,
+                    thumb=ph_path,
+                    caption=dump_caption,
+                    progress=progress_for_pyrogram,
+                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
                 await bot.send_document(
                     update.message.chat.id,
                     document=metadata_path if metadata_mode else file_path,
                     thumb=ph_path,
-                    caption=caption,
+                    caption=user_caption,
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
             elif type == "video":
+                dump_msg = await app.send_video(
+                    Config.DUMP_CHANNEL,
+                    video=metadata_path if metadata_mode else file_path,
+                    caption=dump_caption,
+                    thumb=ph_path,
+                    duration=duration,
+                    progress=progress_for_pyrogram,
+                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
                 await bot.send_video(
                     update.message.chat.id,
                     video=metadata_path if metadata_mode else file_path,
-                    caption=caption,
+                    caption=user_caption,
                     thumb=ph_path,
                     duration=duration,
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
             elif type == "audio":
+                dump_msg = await app.send_audio(
+                    Config.DUMP_CHANNEL,
+                    audio=metadata_path if metadata_mode else file_path,
+                    caption=dump_caption,
+                    thumb=ph_path,
+                    duration=duration,
+                    progress=progress_for_pyrogram,
+                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
                 await bot.send_audio(
                     update.message.chat.id,
                     audio=metadata_path if metadata_mode else file_path,
-                    caption=caption,
+                    caption=user_caption,
                     thumb=ph_path,
                     duration=duration,
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                
         except Exception as e:
             if bot.premium and bot.uploadlimit:
                 used_remove = int(used) - int(media.file_size)
                 await digital_botz.set_used_limit(user_id, used_remove)
             await remove_path(ph_path, file_path, dl_path, metadata_path)
             return await rkn_processing.edit(f" Eʀʀᴏʀ {e}")
-		    
+    
     await remove_path(ph_path, file_path, dl_path, metadata_path)
     return await rkn_processing.edit("Uploaded Successfully....")
-    
