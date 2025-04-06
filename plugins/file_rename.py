@@ -14,8 +14,8 @@ from asyncio import sleep
 import os, time, asyncio
 
 
-UPLOAD_TEXT = """Successfully renamed 💝 Not trying to Upload...."""
-DOWNLOAD_TEXT = """Please Wait!.... Starting to download ✨"""
+UPLOAD_TEXT = """Uploading....✨"""
+DOWNLOAD_TEXT = """Downloading....✨"""
 
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION)
 
