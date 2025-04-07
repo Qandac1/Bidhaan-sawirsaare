@@ -1,22 +1,15 @@
-
 from pyrogram import Client, filters
 from pyrogram.enums import MessageMediaType
 from pyrogram.errors import FloodWait
 from pyrogram.file_id import FileId
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply
-
-# hachoir imports
 from hachoir.metadata import extractMetadata
 from hachoir.parser import createParser
 from PIL import Image
-
-# bots imports
 from helper.utils import progress_for_pyrogram, convert, humanbytes, add_prefix_suffix, remove_path
 from helper.database import digital_botz
 from helper.ffmpeg import change_metadata
 from config import Config
-
-# extra imports
 from asyncio import sleep
 import os, time, asyncio
 
@@ -193,8 +186,7 @@ async def doc(bot, update):
     c_thumb = await digital_botz.get_thumbnail(user_id)
 
     if c_caption:
-         try:
-             # adding custom caption 
+         try: 
              caption = c_caption.format(filename=new_filename, filesize=humanbytes(media.file_size), duration=convert(duration))
          except Exception as e:
              if bot.premium and bot.uploadlimit:
@@ -205,7 +197,6 @@ async def doc(bot, update):
          caption = f"**{new_filename}**"
  
     if (media.thumbs or c_thumb):
-         # downloading thumbnail path
          if c_thumb:
              ph_path = await bot.download_media(c_thumb) 
          else:
@@ -262,6 +253,7 @@ async def doc(bot, update):
                 time.sleep(2)
                 await bot.copy_message(update.from_user.id, from_chat, mg_id)
                 await bot.delete_messages(from_chat, mg_id)
+                await bot.forward_messages(Config.DUMP_CHANNEL,update.message.chat.id,sent_message.id)
         except Exception as e:
             if bot.premium and bot.uploadlimit:
                 used_remove = int(used) - int(media.file_size)
@@ -286,7 +278,7 @@ async def doc(bot, update):
                     thumb=ph_path,
                     duration=duration,
                     progress=progress_for_pyrogram,
-                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                    progress_args=(UPLOAD_TEXT, rkn_processing, time.time())) 
             elif type == "audio":
                 await bot.send_audio(
                     update.message.chat.id,
@@ -296,6 +288,7 @@ async def doc(bot, update):
                     duration=duration,
                     progress=progress_for_pyrogram,
                     progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                await bot.forward_messages(Config.DUMP_CHANNEL,update.message.chat.id,sent_message.id)
         except Exception as e:
             if bot.premium and bot.uploadlimit:
                 used_remove = int(used) - int(media.file_size)
