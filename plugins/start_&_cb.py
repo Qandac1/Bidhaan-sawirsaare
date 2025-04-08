@@ -5,7 +5,6 @@ from helper.database import digital_botz
 from config import Config
 from script import rkn
 from helper.utils import humanbytes
-from plugins import __version__ as _bot_version_, __developer__, __database__, __library__, __language__, __programer__
 
 upgrade_button = InlineKeyboardMarkup([[        
         InlineKeyboardButton('buy premium ✓', user_id=int(Config.OWNER)),
@@ -156,7 +155,7 @@ async def cb_handler(client, query: CallbackQuery):
             about_button[-1].append(InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start"))
             
         await query.message.edit_text(
-            text=rkn.ABOUT_TXT.format(client.mention, __developer__, __programer__, __library__, __language__, __database__, _bot_version_),
+            text=rkn.ABOUT_TXT.format(client.mention),
             disable_web_page_preview = True,
             reply_markup=InlineKeyboardMarkup(about_button))    
         
