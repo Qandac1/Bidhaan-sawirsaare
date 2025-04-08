@@ -1,63 +1,153 @@
-#  Telegram MTProto API Client Library for Pyrogram
-#  Copyright (C) 2017-present DigitalBotz <https://github.com/DigitalBotz>
-#  I am a telegram bot, I created it using pyrogram library. https://github.com/pyrogram
-"""
-Apache License 2.0
-Copyright (c) 2022 @Digital_Botz
+import string, random, os, sys
+from urllib.parse import quote
+from time import time
+from urllib3 import disable_warnings
+from pyrogram import Client, filters 
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+from cloudscraper import create_scraper
+from motor.motor_asyncio import AsyncIOMotorClient
+from config import DB_URI, COLLECTION_NAME, VERIFY_EXPIRE, SHORTLINK_API, SHORTLINK_SITE, PREMIUM_USERS
 
-Telegram Link : https://t.me/Digital_Botz 
-Repo Link : https://github.com/DigitalBotz/Digital-Rename-Bot
-License Link : https://github.com/DigitalBotz/Digital-Rename-Bot/blob/main/LICENSE
-"""
+DATABASE_URL = DB_URI
 
-__name__ = "Digital-Rename-Bot"
-__version__ = "3.0.8"
-__license__ = " Apache License, Version 2.0"
-__copyright__ = "Copyright (C) 2022-present Digital Botz <https://github.com/DigitalBotz>"
-__programer__ = "<a href=https://github.com/DigitalBotz/Digital-Rename-Bot>Digital Botz</a>"
-__library__ = "<a href=https://github.com/pyrogram>Pyʀᴏɢʀᴀᴍ</a>"
-__language__ = "<a href=https://www.python.org/>Pyᴛʜᴏɴ 3</a>"
-__database__ = "<a href=https://cloud.mongodb.com/>Mᴏɴɢᴏ DB</a>"
-__developer__ = "<a href=https://t.me/Digital_Botz>Digital Botz</a>"
-__maindeveloper__ = "<a href=https://t.me/RknDeveloper>RknDeveloper</a>"
+verify_dict = {}
+missing=[v for v in ["COLLECTION_NAME", "SHORTLINK_SITE", "SHORTLINK_API"] if not v]; sys.exit(f"Missing: {', '.join(missing)}") if missing else None
 
-# main copyright herders (©️)
-# I have been working on this repo since 2022
+# GLOBAL VERIFY FUNCTIONS 
+async def token_system_filter(_, __, message):
+    uid = message.from_user.id
+    if not VERIFY_EXPIRE or uid in PREMIUM_USERS:
+        return False
+    if message.text:
+        cmd = message.text.split()
+        if len(cmd) == 2:
+            data = cmd[1]
+            if data.startswith("verify"):
+                return True
+    isVerified = await is_user_verified(uid)
+    if isVerified:
+        return False
+    return True 
+    
+@Client.on_message((filters.private|filters.group) & filters.incoming & filters.create(token_system_filter) & ~filters.bot)
+async def global_verify_function(client, message):
+    if message.text:
+        cmd = message.text.split()
+        if len(cmd) == 2:
+            data = cmd[1]
+            if data.startswith("verify"):
+                await validate_token(client, message, data)
+                return
+    await send_verification(client, message)
+        
+# DATABSE
+class VerifyDB():
+    def __init__(self):
+        self._dbclient = AsyncIOMotorClient(DATABASE_URL)
+        self._db = self._dbclient['verify-db']
+        self._verifydb = self._db[COLLECTION_NAME]  
 
+    async def get_verify_status(self, user_id):
+        if status := await self._verifydb.find_one({'id': user_id}):
+            return status.get('verify_status', 0)
+        return 0
 
-# main working files 
-# - bot.py
-# - web_support.py
-# - plugins/
-# - start_&_cb.py
-# - Force_Sub.py
-# - admin_panel.py
-# - file_rename.py
-# - metadata.py
-# - prefix_&_suffix.py
-# - thumb_&_cap.py
-# - config.py
-# - utils.py
-# - database.py
+    async def update_verify_status(self, user_id):
+        await self._verifydb.update_one({'id': user_id}, {'$set': {'verify_status': time()}}, upsert=True)
 
-# bot run files
-# - bot.py
-# - Procfile
-# - Dockerfile
-# - requirements.txt
-# - runtime.txt
+verifydb = VerifyDB()
+
+# FUNCTIONS
+async def is_user_verified(user_id):
+    if not VERIFY_EXPIRE:
+        return True
+    isveri = await verifydb.get_verify_status(user_id)
+    if not isveri or (time() - isveri) >= float(VERIFY_EXPIRE):
+        return False
+    return True    
+    
+async def send_verification(client, message, text=None, buttons=None):
+    username = (await client.get_me()).username
+    if done := await is_user_verified(message.from_user.id):
+        text = f'<b>Hi 👋 {message.from_user.mention},\nYou Are Already Verified Enjoy 😄</b>'
+    else:
+        verify_token = await get_verify_token(client, message.from_user.id, f"https://telegram.me/{username}?start=")
+        buttons = InlineKeyboardMarkup([
+            [InlineKeyboardButton('Get Token', url=verify_token)]
+        ])
+    if not text:
+        vtext = f"""<b>Hi 👋 {message.from_user.mention}, 
+<blockquote expandable>\n𝙺𝚒𝚗𝚍𝚕𝚢 𝚟𝚎𝚛𝚒𝚏𝚢 𝚢𝚘𝚞𝚛𝚜𝚎𝚕𝚏 𝚝𝚘 𝚞𝚜𝚎 𝚖𝚎!! 
+𝚃𝚑𝚒𝚜 𝚒𝚜 𝚝𝚘 𝚊𝚟𝚘𝚒𝚍 𝚜𝚙𝚊𝚖 𝚘𝚗 𝚝𝚑𝚎 𝚋𝚘𝚝 𝚊𝚗𝚍 𝚐𝚎𝚝 𝚖𝚘𝚗𝚎𝚢 𝚝𝚘 𝚛𝚞𝚗 𝚝𝚑𝚎 𝚋𝚘𝚝, 𝚠𝚎 𝚑𝚘𝚙𝚎 𝚢𝚘𝚞 𝚝𝚑𝚊𝚝 𝚢𝚘𝚞 𝚠𝚒𝚕𝚕 𝚞𝚗𝚍𝚎𝚛𝚜𝚝𝚊𝚗𝚍 𝚊𝚗𝚍 𝚑𝚎𝚕𝚙 𝚞𝚜! 𝙸𝚝 𝚠𝚒𝚕𝚕 𝚘𝚗𝚕𝚢 𝚝𝚊𝚔𝚎 𝟸 𝚖𝚒𝚗𝚞𝚝𝚎𝚜 𝚝𝚘 𝚌𝚘𝚖𝚙𝚕𝚎𝚝𝚎 𝚒𝚝.
+         ㅤㅤㅤㅤㅤ   - Thank You 
+\nValidity: {get_readable_time(VERIFY_EXPIRE)}</b>"""
+    message = message if isinstance(message, Message) else message.message
+    await client.send_message(
+        chat_id=message.chat.id,
+        text=vtext,
+        reply_markup=buttons,
+        reply_to_message_id=message.id,
+    )
+ 
+async def get_verify_token(bot, userid, link):
+    vdict = verify_dict.setdefault(userid, {})
+    short_url = vdict.get('short_url')
+    if not short_url:
+        token = ''.join(random.choices(string.ascii_letters + string.digits, k=9))
+        long_link = f"{link}verify-{userid}-{token}"
+        short_url = await get_short_url(long_link)
+        vdict.update({'token': token, 'short_url': short_url})
+    return short_url
+
+async def get_short_url(longurl, shortener_site = SHORTLINK_SITE, shortener_api = SHORTLINK_API):
+    cget = create_scraper().request
+    disable_warnings()
+    try:
+        url = f'https://{shortener_site}/api'
+        params = {'api': shortener_api,
+                  'url': longurl,
+                  'format': 'text',
+                 }
+        res = cget('GET', url, params=params)
+        if res.status_code == 200 and res.text:
+            return res.text
+        else:
+            params['format'] = 'json'
+            res = cget('GET', url, params=params)
+            res = res.json()
+            if res.status_code == 200:
+                return res.get('shortenedUrl', long_url)
+    except Exception as e:
+        print(e)
+        return long_link
+
+async def validate_token(client, message, data):
+    user_id = message.from_user.id
+    vdict = verify_dict.setdefault(user_id, {})
+    dict_token = vdict.get('token', None)
+    if await is_user_verified(user_id):
+        return await message.reply("<b>Sɪʀ, Yᴏᴜ Aʀᴇ Aʟʀᴇᴀᴅʏ Vᴇʀɪғɪᴇᴅ 🤓...</b>")
+    if not dict_token:
+        return await send_verification(client, message, text="<b>Tʜᴀᴛ's Nᴏᴛ Yᴏᴜʀ Vᴇʀɪғʏ Tᴏᴋᴇɴ 🥲...\n\n\nTᴀᴘ Oɴ Vᴇʀɪғʏ Tᴏ Gᴇɴᴇʀᴀᴛᴇ Yᴏᴜʀs...</b>")  
+    _, uid, token = data.split("-")
+    if uid != str(user_id):
+        return await send_verification(client, message, text="<b>Vᴇʀɪғʏ Tᴏᴋᴇɴ Dɪᴅ Nᴏᴛ Mᴀᴛᴄʜᴇᴅ 😕...\n\n\nTᴀᴘ Oɴ Vᴇʀɪғʏ Tᴏ Gᴇɴᴇʀᴀᴛᴇ Aɢᴀɪɴ...</b>")
+    elif dict_token != token:
+        return await send_verification(client, message, text="<b>Iɴᴠᴀʟɪᴅ Oʀ Exᴘɪʀᴇᴅ Tᴏᴋᴇɴ 🔗...</b>")
+    verify_dict.pop(user_id, None)
+    await verifydb.update_verify_status(user_id)
+    await client.send_photo(chat_id=message.from_user.id,
+                            photo=VERIFY_PHOTO,
+                            caption=f'<b>Wᴇʟᴄᴏᴍᴇ Bᴀᴄᴋ 😁, Nᴏᴡ Yᴏᴜ Cᴀɴ Usᴇ Mᴇ Fᴏʀ {get_readable_time(VERIFY_EXPIRE)}.\n\n\nEɴᴊᴏʏʏʏ...❤️</b>',
+                            reply_to_message_id=message.id,
+                            )
+    
+def get_readable_time(seconds):
+    periods = [('ᴅ', 86400), ('ʜ', 3600), ('ᴍ', 60), ('s', 1)]
+    result = ''
+    for period_name, period_seconds in periods:
+        if seconds >= period_seconds:
+            period_value, seconds = divmod(seconds, period_seconds)
+            result += f'{int(period_value)}{period_name}'
+    return result
