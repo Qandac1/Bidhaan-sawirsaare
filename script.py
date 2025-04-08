@@ -11,13 +11,12 @@ class rkn(object):
 
 Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ 👇 with 💝</b>"""
 
-    ABOUT_TXT = """<b>╭───────────⍟
-├🤖 ᴍy ɴᴀᴍᴇ : {}
-├🖥️ Dᴇᴠᴇʟᴏᴩᴇʀꜱ : {}
-├👨‍💻 Pʀᴏɢʀᴀᴍᴇʀ : {}
-├📕 Lɪʙʀᴀʀy : {}
-├✏️ Lᴀɴɢᴜᴀɢᴇ: {}
-├💾 Dᴀᴛᴀ Bᴀꜱᴇ: {}</b>     
+    ABOUT_TXT = f"""<b>╭───────────⍟
+├🤖 ᴍy ɴᴀᴍᴇ : {client.mention} V1.0
+├🛠️ : 1.0
+├📕 Lɪʙʀᴀʀy : <a href=https://github.com/pyrogram>Pyʀᴏɢʀᴀᴍ</a>
+├✏️ Lᴀɴɢᴜᴀɢᴇ: <a href=https://www.python.org/>Pyᴛʜᴏɴ 3</a>
+├💾 Dᴀᴛᴀ Bᴀꜱᴇ: <a href=https://cloud.mongodb.com/>Mᴏɴɢᴏ DB</a></b>     
 ╰───────────────⍟ """
 
     HELP_TXT = """
@@ -49,7 +48,6 @@ Tʜɪs Bᴏᴛ Wᴀs Cʀᴇᴀᴛᴇᴅ Bʏ 👇 with 💝</b>"""
 𝘗𝘳𝘪𝘤𝘦: 199
 𝘓𝘪𝘮𝘪𝘵: 1000 𝘎𝘉
 
-- 𝘋𝘪𝘴𝘤𝘰𝘶𝘯𝘵 𝘈𝘭𝘭 𝘗𝘭𝘢𝘯 𝘙𝘴.9
     """
     
     THUMBNAIL = """
