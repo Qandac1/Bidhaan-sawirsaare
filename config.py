@@ -46,3 +46,5 @@ VERIFY_EXPIRE = os.environ.get('VERIFY_EXPIRE', 3600) # VERIFY EXPIRE TIME IN SE
 SHORTLINK_SITE = os.environ.get('SHORTLINK_SITE', 'linkmonetizer.in') # YOUR SHORTLINK URL LIKE:- site.com
 SHORTLINK_API = os.environ.get('SHORTLINK_API', 'bf35b33b841943cdce510413393f35a9ff0bb558') # YOUR SHORTLINK API LIKE:- ma82owowjd9hw6_js7
 PREMIUM_USERS = list(map(int, os.environ.get('PREMIUM_USERS', '1705634892').split()))
+COLLECTION_NAME = os.environ.get('COLLECTION_NAME', 'Verified') #For Token verification 
+    
