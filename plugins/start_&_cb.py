@@ -155,7 +155,7 @@ async def cb_handler(client, query: CallbackQuery):
             about_button[-1].append(InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start"))
             
         await query.message.edit_text(
-            text=rkn.ABOUT_TXT.format(client.mention),
+            text=rkn.ABOUT_TXT,
             disable_web_page_preview = True,
             reply_markup=InlineKeyboardMarkup(about_button))    
         
