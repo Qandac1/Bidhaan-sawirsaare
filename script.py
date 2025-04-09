@@ -18,7 +18,7 @@ Made with love by @{}</b>"""
 ├📕 Lɪʙʀᴀʀy : <a href=https://github.com/pyrogram>Pyʀᴏɢʀᴀᴍ</a>
 ├✏️ Lᴀɴɢᴜᴀɢᴇ: <a href=https://www.python.org/>Pyᴛʜᴏɴ 3</a>
 ├💾 Dᴀᴛᴀ Bᴀꜱᴇ: <a href=https://cloud.mongodb.com/>Mᴏɴɢᴏ DB</a></b>     
-├ 𝚃𝚑𝚒𝚜 𝚋𝚘𝚝 𝚒𝚜 𝚖𝚊𝚒𝚗𝚝𝚊𝚒𝚗𝚎𝚍 𝚋𝚢 {}
+├ 𝚃𝚑𝚒𝚜 𝚋𝚘𝚝 𝚒𝚜 𝚖𝚊𝚒𝚗𝚝𝚊𝚒𝚗𝚎𝚍 𝚋𝚢 @{}
 ╰───────────────⍟ """
 
     HELP_TXT = """
