@@ -153,9 +153,9 @@ async def cb_handler(client, query: CallbackQuery):
             about_button.append([InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start")])
         else:
             about_button[-1].append(InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start"))
-        own = bot_instance.get_users(Config.OWNER)    
+        
         await query.message.edit_text(
-            text=rkn.ABOUT_TXT.format(client.mention,Config.OWNER,own.first_name),
+            text=rkn.ABOUT_TXT.format(client.mention,Config.OWNER,Config.DEV),
             disable_web_page_preview = True,
             reply_markup=InlineKeyboardMarkup(about_button))    
         
