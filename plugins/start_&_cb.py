@@ -120,9 +120,9 @@ async def cb_handler(client, query: CallbackQuery):
             
         if client.premium:
             start_button.append([InlineKeyboardButton('💸 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💸', callback_data='upgrade')])
-        user = message.from_user    
+            
         await query.message.edit_text(
-            text=rkn.START_TXT.format(callback_query.from_user.mention,Config.UPDATES),
+            text=rkn.START_TXT.format(query.from_user.mention,Config.UPDATES),
             disable_web_page_preview=True,
             reply_markup = InlineKeyboardMarkup(start_button))
         
