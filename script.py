@@ -12,8 +12,9 @@ class rkn(object):
 Made with love by @{Config.UPDATES}</b>"""
 
     ABOUT_TXT = f"""<b>╭───────────⍟
-├🤖 ᴍy ɴᴀᴍᴇ : {client.mention} V1.0
-├🛠️ : 1.0
+├🤖 ᴍy ɴᴀᴍᴇ : {client.mention} 
+├👨‍💻 : <a href=tg://user?id={Config.OWNER}>{own.first_name}</a>
+├🛠️ Vᴇʀsɪᴏɴ : 1.0
 ├📕 Lɪʙʀᴀʀy : <a href=https://github.com/pyrogram>Pyʀᴏɢʀᴀᴍ</a>
 ├✏️ Lᴀɴɢᴜᴀɢᴇ: <a href=https://www.python.org/>Pyᴛʜᴏɴ 3</a>
 ├💾 Dᴀᴛᴀ Bᴀꜱᴇ: <a href=https://cloud.mongodb.com/>Mᴏɴɢᴏ DB</a></b>     
