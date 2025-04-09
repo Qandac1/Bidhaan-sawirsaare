@@ -36,9 +36,9 @@ async def start(client, message):
     user = message.from_user
     await digital_botz.add_user(client, message) 
     if Config.RKN_PIC:
-        await message.reply_photo(Config.RKN_PIC, caption=rkn.START_TXT, reply_markup=InlineKeyboardMarkup(start_button))    
+        await message.reply_photo(Config.RKN_PIC, caption=rkn.START_TXT.format(user.mention,Config.UPDATES), reply_markup=InlineKeyboardMarkup(start_button))    
     else:
-        await message.reply_text(text=rkn.START_TXT, reply_markup=InlineKeyboardMarkup(start_button), disable_web_page_preview=True)
+        await message.reply_text(text=rkn.START_TXT.format(user.mention,Config.UPDATES), reply_markup=InlineKeyboardMarkup(start_button), disable_web_page_preview=True)
 
 
 @Client.on_message(filters.private & filters.command("myplan"))
@@ -155,7 +155,7 @@ async def cb_handler(client, query: CallbackQuery):
             about_button[-1].append(InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start"))
         own = app.get_users(Config.OWNER)    
         await query.message.edit_text(
-            text=rkn.ABOUT_TXT,
+            text=rkn.ABOUT_TXT.format(client.mention,Config.OWNER,own.first_name),
             disable_web_page_preview = True,
             reply_markup=InlineKeyboardMarkup(about_button))    
         
