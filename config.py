@@ -20,6 +20,7 @@ class Config(object):
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002288135729"))
     DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002288135729"))
     OWNER = int(os.environ.get("OWNER", "7465574522"))
+    DEV= os.environ.get("DEV", "Itsme123i")
 
     # free upload limit 
     FREE_UPLOAD_LIMIT = 6442450944 # calculation 6*1024*1024*1024=results
