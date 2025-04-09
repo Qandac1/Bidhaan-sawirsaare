@@ -12,7 +12,7 @@ from plugins.file_rename import app
 
 
 pyrogram.utils.MIN_CHANNEL_ID = -1009999999999
-
+own = app.get_users(Config.OWNER)
 # Get logging configurations
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
