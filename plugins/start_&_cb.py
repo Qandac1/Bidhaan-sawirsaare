@@ -122,7 +122,7 @@ async def cb_handler(client, query: CallbackQuery):
             start_button.append([InlineKeyboardButton('💸 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💸', callback_data='upgrade')])
         user = message.from_user    
         await query.message.edit_text(
-            text=rkn.START_TXT,
+            text=rkn.START_TXT.format(callback_query.from_user.mention,Config.UPDATES),
             disable_web_page_preview=True,
             reply_markup = InlineKeyboardMarkup(start_button))
         
@@ -153,7 +153,7 @@ async def cb_handler(client, query: CallbackQuery):
             about_button.append([InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start")])
         else:
             about_button[-1].append(InlineKeyboardButton("Bᴀᴄᴋ", callback_data = "start"))
-        own = app.get_users(Config.OWNER)    
+        own = bot_instance.get_users(Config.OWNER)    
         await query.message.edit_text(
             text=rkn.ABOUT_TXT.format(client.mention,Config.OWNER,own.first_name),
             disable_web_page_preview = True,
