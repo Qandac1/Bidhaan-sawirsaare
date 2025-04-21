@@ -3,24 +3,24 @@ id_pattern = re.compile(r'^.\d+$')
 
 class Config(object):
     # digital_botz client config
-    API_ID = os.environ.get("API_ID", "")
-    API_HASH = os.environ.get("API_HASH", "")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "") 
+    API_ID = os.environ.get("API_ID", "26385571")
+    API_HASH = os.environ.get("API_HASH", "aac7a3c3c2f36e72201a6a5a21eb802a")
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "8056090761:AAF8euR7g2HTgv9bYIINzFuoFJ2FyY7Alxo") 
 
     # premium account string session required 😢 
     STRING_SESSION = os.environ.get("STRING_SESSION", "")
     
     # database config
-    DB_NAME = os.environ.get("DB_NAME","Digital_Rename_Bot")     
-    DB_URL = os.environ.get("DB_URL","")
+    DB_NAME = os.environ.get("DB_NAME","BidhaanRENAMER_BOT")     
+    DB_URL = os.environ.get("DB_URL","mongodb+srv://BIGFIISH:iFyAm2DZqEzo76VW@cluster0.z6bhz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
  
     # other configs
     RKN_PIC = os.environ.get("RKN_PIC", "https://telegra.ph/file/b746aadfe59959eb76f59.jpg")
     
     #ID's
-    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '').split()]
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", ""))
-    DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", ""))
+    ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6169808990').split()]
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002586992832"))
+    DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002586992832"))
     OWNER = int(os.environ.get("OWNER", ""))
     
 
@@ -32,11 +32,11 @@ class Config(object):
     PREMIUM_MODE = True #True or False 
 
     # Usernames 
-    UPDATES = os.environ.get("UPDATES", "") #Eg: The_TGguy
-    DEV= os.environ.get("DEV", "") #Eg: Itsme123i
+    UPDATES = os.environ.get("UPDATES", "BIDHAANBOTS") #Eg: The_TGguy
+    DEV= os.environ.get("DEV", "BIG_FiiSH") #Eg: Itsme123i
     
     #force subs ID
-    FORCE_SUB = int(os.environ.get("FORCE_SUB", "")) #Fsub 🆔 
+    FORCE_SUB = int(os.environ.get("FORCE_SUB", "-1002668404997")) #Fsub 🆔 
       
     # wes response configuration     
     PORT = int(os.environ.get("PORT", "8080"))
