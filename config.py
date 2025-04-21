@@ -21,7 +21,7 @@ class Config(object):
     ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6169808990').split()]
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002586992832"))
     DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002586992832"))
-    OWNER = int(os.environ.get("OWNER", ""))
+    OWNER = int(os.environ.get("OWNER", "6169808990"))
     
 
     # free upload limit 
