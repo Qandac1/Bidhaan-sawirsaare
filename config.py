@@ -21,7 +21,7 @@ class Config(object):
     ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6169808990').split()]
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002537610513"))
     DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002586992832"))
-    OWNER = int(os.environ.get("OWNER", "6169808990"))
+    OWNER = int(os.environ.get("OWNER", "5289910678"))
     
 
     # free upload limit 
@@ -36,7 +36,7 @@ class Config(object):
     DEV= os.environ.get("DEV", "BIG_FiiSH") #Eg: Itsme123i
     
     #force subs ID
-    FORCE_SUB = int(os.environ.get("FORCE_SUB", "-1002668404997")) #Fsub 🆔 
+    FORCE_SUB = int(os.environ.get("FORCE_SUB", "-1002668404997"))  # Fsub 🆔
       
     # wes response configuration     
     PORT = int(os.environ.get("PORT", "8080"))
