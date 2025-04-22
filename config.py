@@ -19,7 +19,7 @@ class Config(object):
     
     #ID's
     ADMIN = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6169808990').split()]
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002586992832"))
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1002537610513"))
     DUMP_CHANNEL = int(os.environ.get("DUMP_CHANNEL", "-1002586992832"))
     OWNER = int(os.environ.get("OWNER", "6169808990"))
     
